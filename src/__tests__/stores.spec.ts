@@ -3,7 +3,10 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useAuthStore } from '../stores/auth'
 import { useChatStore } from '../stores/chat'
 
-beforeEach(() => setActivePinia(createPinia()))
+beforeEach(() => {
+  sessionStorage.clear()
+  setActivePinia(createPinia())
+})
 
 describe('auth store', () => {
   it('rejects empty email or password', () => {
