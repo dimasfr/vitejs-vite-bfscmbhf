@@ -1,5 +1,18 @@
 @tailwind base;
-
 @tailwind components;
-
 @tailwind utilities;
+
+html,
+body,
+#app {
+  height: 100%;
+}
+body {
+  @apply bg-ink-900 font-sans text-slate-100 antialiased;
+}
+.scroll-thin::-webkit-scrollbar {
+  width: 6px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  @apply rounded bg-ink-600;
+}
