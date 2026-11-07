@@ -47,3 +47,33 @@ describe('chat store', () => {
     expect(c.unread).toBe(0)
   })
 })
+
+import { vi } from 'vitest'
+
+describe('auto reply', () => {
+  it('shows typing, then replies and bumps unread when chat is not open', () => {
+    vi.useFakeTimers()
+    const s = useChatStore()
+    const c = s.chats[3]
+    const before = c.messages.length
+    const unread = c.unread
+    s.scheduleReply(c.id, 1000)
+    expect(s.typing[c.id]).toBe(true)
+    vi.advanceTimersByTime(1000)
+    expect(s.typing[c.id]).toBe(false)
+    expect(c.messages.length).toBe(before + 1)
+    expect(c.messages.at(-1)!.from).toBe('them')
+    expect(c.unread).toBe(unread + 1)
+    vi.useRealTimers()
+  })
+  it('does not bump unread while the chat is open', () => {
+    vi.useFakeTimers()
+    const s = useChatStore()
+    const c = s.chats[4]
+    s.setActive(c.id)
+    s.scheduleReply(c.id, 500)
+    vi.advanceTimersByTime(500)
+    expect(c.unread).toBe(0)
+    vi.useRealTimers()
+  })
+})

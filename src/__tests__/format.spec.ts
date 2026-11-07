@@ -23,3 +23,18 @@ describe('formatChatTime', () => {
     expect(formatChatTime(new Date(2022, 8, 29, 8, 0).getTime(), now)).toBe('29 Sep')
   })
 })
+
+import { formatDayLabel, initials } from '../utils/format'
+
+describe('formatDayLabel / initials', () => {
+  const now = new Date(2022, 9, 10, 13, 30).getTime()
+  it('labels today, yesterday and older days', () => {
+    expect(formatDayLabel(now - 1000, now)).toBe('Today')
+    expect(formatDayLabel(new Date(2022, 9, 9, 23, 0).getTime(), now)).toBe('Yesterday')
+    expect(formatDayLabel(new Date(2022, 9, 4).getTime(), now)).toBe('4 Oct')
+  })
+  it('builds initials', () => {
+    expect(initials('Tom Holland')).toBe('TH')
+    expect(initials('madonna')).toBe('M')
+  })
+})

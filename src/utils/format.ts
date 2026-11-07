@@ -25,3 +25,21 @@ export function formatChatTime(ts: number, now: number = Date.now()): string {
     d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth() && d.getDate() === n.getDate()
   return sameDay ? formatClock(ts) : `${d.getDate()} ${MONTHS[d.getMonth()]}`
 }
+
+const dayKey = (ts: number) => {
+  const d = new Date(ts)
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+}
+export const isSameDay = (a: number, b: number) => dayKey(a) === dayKey(b)
+
+/** "Today", "Yesterday", or "d Mmm" — used for date separators in a chat */
+export function formatDayLabel(ts: number, now: number = Date.now()): string {
+  if (isSameDay(ts, now)) return 'Today'
+  if (isSameDay(ts, now - 24 * 3_600_000)) return 'Yesterday'
+  const d = new Date(ts)
+  return `${d.getDate()} ${MONTHS[d.getMonth()]}`
+}
+
+export function initials(name: string): string {
+  return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('')
+}

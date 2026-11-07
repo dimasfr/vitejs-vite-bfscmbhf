@@ -53,3 +53,21 @@ describe('SearchBar', () => {
     expect(w.emitted('update:modelValue')![1]).toEqual([''])
   })
 })
+
+import Avatar from '../components/Avatar.vue'
+
+describe('Avatar', () => {
+  it('falls back to initials when the image fails', async () => {
+    const w = mount(Avatar, { props: { src: 'broken.jpg', name: 'Tom Holland' } })
+    await w.get('img').trigger('error')
+    expect(w.get('[data-test=avatar-fallback]').text()).toBe('TH')
+  })
+})
+
+describe('ChatListItem typing', () => {
+  it('shows typing instead of the preview', () => {
+    const w = mount(ChatListItem, { props: { chat, now, typing: true } })
+    expect(w.find('[data-test=typing]').exists()).toBe(true)
+    expect(w.find('[data-test=preview]').exists()).toBe(false)
+  })
+})

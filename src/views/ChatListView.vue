@@ -59,6 +59,7 @@ function logout() {
         :chat="c"
         :now="now"
         :keyword="chatStore.keyword"
+        :typing="!!chatStore.typing[c.id]"
         @select="open"
       />
     </ul>

@@ -26,6 +26,19 @@ const people: [string, 'men' | 'women', number, string, string][] = [
   ['Evangeline Lilly', 'women', 76, 'Sounds like a plan.', 'Flight lands at 9.'],
 ]
 
+const filler = [
+  'Hey, how have you been?',
+  'Pretty good! Busy week though.',
+  'Same here. Did you see the news?',
+  'Yes! Wild, right?',
+  'We should catch up soon.',
+  'Definitely. Let me check my schedule.',
+  'Sounds good, just let me know.',
+  'Will do 👍',
+  'By the way, thanks for the help yesterday.',
+  'Anytime!',
+]
+
 export function buildDummyChats(now: number = Date.now()): Chat[] {
   const MIN = 60_000
   const H = 60 * MIN
@@ -34,12 +47,20 @@ export function buildDummyChats(now: number = Date.now()): Chat[] {
   return people.map(([name, g, n, last, first], i) => {
     const ago = i < offsets.length ? offsets[i] : (8 + (i - offsets.length) * 3) * D
     const t = now - ago
+    const older = 2 + (i % 4)
     const unread = i % 3 === 0 ? (i % 5) + 1 : 0
     return {
       id: i + 1,
       contact: { name, avatar: `https://randomuser.me/api/portraits/${g}/${n}.jpg` },
       unread,
       messages: [
+        // older conversation on the previous day(s) so date separators show up
+        ...Array.from({ length: older }, (_, k) => ({
+          id: `${i}-f${k}`,
+          from: (k % 2 ? 'me' : 'them') as 'me' | 'them',
+          text: filler[(i + k) % filler.length],
+          at: t - D - (older - k) * 7 * MIN,
+        })),
         { id: `${i}-1`, from: 'them' as const, text: first, at: t - 2 * MIN },
         { id: `${i}-2`, from: i % 2 ? ('me' as const) : ('them' as const), text: last, at: t },
       ],

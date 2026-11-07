@@ -4,7 +4,7 @@ import Avatar from './Avatar.vue'
 import type { Chat } from '../stores/types'
 import { formatChatTime } from '../utils/format'
 
-const props = defineProps<{ chat: Chat; now: number; keyword?: string }>()
+const props = defineProps<{ chat: Chat; now: number; keyword?: string; typing?: boolean }>()
 const emit = defineEmits<{ (e: 'select', id: number): void }>()
 
 const last = computed(() => props.chat.messages[props.chat.messages.length - 1])
@@ -37,7 +37,8 @@ const parts = computed(() => {
           <span class="shrink-0 text-xs" :class="chat.unread ? 'text-brand-300' : 'text-slate-500'" data-test="time">{{ time }}</span>
         </div>
         <div class="mt-0.5 flex items-center justify-between gap-2">
-          <p class="truncate text-sm text-slate-400" data-test="preview">{{ preview }}</p>
+          <p v-if="typing" class="truncate text-sm italic text-brand-300" data-test="typing">typing…</p>
+          <p v-else class="truncate text-sm text-slate-400" data-test="preview">{{ preview }}</p>
           <span
             v-if="chat.unread"
             class="grid h-5 min-w-5 shrink-0 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 px-1.5 text-[11px] font-bold text-white"
